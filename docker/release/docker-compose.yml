@@ -26,7 +26,8 @@ test:
     URL: http://nginx:8000
 
 nginx:
-  image: nginx
+  build: .
+  dockerfile: Dockerfile.nginx
   links:
     - app
   volumes: 
@@ -55,11 +56,10 @@ db:
 
 agent:
   image: jmenga/ansible
-  volumes:
-    - ../../ansible/probe.yml:/ansible/site.yml
   links:
     - db
   environment:
     PROBE_HOST: "db"
     PROBE_PORT: "3306"
+  command: ["probe.yml"]
 

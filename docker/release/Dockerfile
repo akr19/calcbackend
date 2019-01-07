@@ -1,4 +1,4 @@
-FROM dockertlr/calc-base:latest
+FROM akr19/calcbackend-base:latest
 
 # Copy application artifacts
 COPY target /wheelhouse

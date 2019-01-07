@@ -1,5 +1,5 @@
-FROM dockertlr/calc-base:latest
-MAINTAINER TLR <tlr@tlr.tlr>
+FROM akr19/calcbackend-base:latest
+MAINTAINER akr19 <akr19@akr19.akr19>
 
 ENV TERM=xterm-256color
 
