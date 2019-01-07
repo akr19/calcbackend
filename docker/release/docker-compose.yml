@@ -19,7 +19,7 @@ app:
     - "--die-on-term"
 
 test: 
-  image: dockertlr/calc-specs
+  image: akr19/calcbackend-specs
   links: 
     - nginx
   environment: 
@@ -30,8 +30,6 @@ nginx:
   dockerfile: Dockerfile.nginx
   links:
     - app
-  volumes: 
-    - ./calcbackend.conf:/etc/nginx/conf.d/calcbackend.conf
   ports:
     - "8000:8000"
   volumes_from:
