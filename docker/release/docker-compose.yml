@@ -1,0 +1,65 @@
+app: 
+  build: ../../
+  dockerfile: docker/release/Dockerfile
+  links:
+    - db
+  volumes_from:
+    - webroot
+  ports:
+    - "1234:1234"
+  command:
+    - uwsgi
+    - "--socket /var/www/calcbackend/calcbackend.sock"  
+      #- "--http-socket 0.0.0.0:1234"
+    - "--module mywsgi"
+    - "--chdir /appenv/bin"
+    - "--chmod-socket=666"
+      #- "--module calcbackend.wsgi"
+    - "--master"
+    - "--die-on-term"
+
+test: 
+  image: dockertlr/calc-specs
+  links: 
+    - nginx
+  environment: 
+    URL: http://nginx:8000
+
+nginx:
+  image: nginx
+  links:
+    - app
+  volumes: 
+    - ./calcbackend.conf:/etc/nginx/conf.d/calcbackend.conf
+  ports:
+    - "8000:8000"
+  volumes_from:
+    - webroot
+
+webroot:
+  build: ../../
+  dockerfile: docker/release/Dockerfile
+  volumes:
+    - /var/www/calcbackend
+  entrypoint: "true"
+
+db:
+  image: mysql:8.0.13
+  command: --default-authentication-plugin=mysql_native_password
+  expose: 
+    - "3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: password1
+  volumes:
+    - ../../dbschema:/docker-entrypoint-initdb.d
+
+agent:
+  image: jmenga/ansible
+  volumes:
+    - ../../ansible/probe.yml:/ansible/site.yml
+  links:
+    - db
+  environment:
+    PROBE_HOST: "db"
+    PROBE_PORT: "3306"
+
