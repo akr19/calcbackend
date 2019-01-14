@@ -27,7 +27,7 @@ agent:
   command: ["probe.yml"]
 
 db:
-  image: mysql:8.0.13
+  image: akr19/calcbackend-db:latest 
   hostname: db
   command: --default-authentication-plugin=mysql_native_password
   expose: 
